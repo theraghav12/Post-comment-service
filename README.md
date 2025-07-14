@@ -135,6 +135,14 @@ To start the server locally, simply use:
 go run main.go
 ```
 
+## API Testing with Postman
+
+You can test all API endpoints using Postman. Join the shared Postman workspace to access a pre-built folder structure for testing all endpoints:
+
+[Join Postman Team Workspace](https://app.getpostman.com/join-team?invite_code=bbdadb0beac1134d4fa892774d9b78b77abf5bd5dfaf2e4f65c74cf0746437f3&target_code=7301e672379669bf42456c8c8a5d10ba)
+
+This workspace contains organized collections for authentication, posts, and comments APIs, making testing easy and structured.
+
 ## Rate Limiting
 
 The API implements rate limiting to prevent abuse:
