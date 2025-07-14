@@ -149,7 +149,6 @@ You can create posts using either of the following endpoints:
 {
   "title": "My First Post",
   "content": "Hello **world**!",
-  "author": "raghav" // optional, will be set from user if omitted
 }
 ```
 
@@ -160,7 +159,7 @@ You can create posts using either of the following endpoints:
 {
   "title": "Guest Post",
   "content": "Anyone can post!",
-  "author": "Anonymous Guest" // optional
+  "author": "Anonymous Guest" 
 }
 ```
 
@@ -200,7 +199,7 @@ You can add comments to posts using any of the following endpoints:
 {
   "post_id": 1,
   "content": "Guest comment with *Markdown*.",
-  "author": "Anonymous Guest" // optional
+  "author": "Anonymous Guest" 
 }
 ```
 
