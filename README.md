@@ -154,7 +154,7 @@ You can create posts using either of the following endpoints:
 ```
 
 ### 2. Guest (no authentication required)
-- **Endpoint:** `POST /api/posts/public`
+- **Endpoint:** `POST /api/public/posts`
 - **Body:**
 ```json
 {
@@ -168,22 +168,33 @@ Both endpoints return the created post, including Markdown and rendered HTML.
 
 ## Creating Comments: Authenticated and Guest
 
-You can add comments to posts using either of the following endpoints:
+You can add comments to posts using any of the following endpoints:
 
 ### 1. Authenticated (requires JWT)
-- **Endpoint:** `POST /api/posts/{post_id}/comments`
-- **Headers:**
-  - `Authorization: Bearer <your-jwt-token>`
-- **Body:**
+- **Endpoint 1:** `POST /api/posts/comments`
+  - **Headers:**
+    - `Authorization: Bearer <your-jwt-token>`
+  - **Body:**
 ```json
 {
+  "post_id": 1,
   "content": "Nice post! [Link](https://example.com)",
-  "author": "raghav" // optional, will be set from user if omitted
+}
+```
+- **Endpoint 2:** `POST /api/comments`
+  - **Headers:**
+    - `Authorization: Bearer <your-jwt-token>`
+  - **Body:**
+```json
+{
+  "post_id": 1,
+  "content": "Another way to comment as auth user.",
+  "author": "raghav"
 }
 ```
 
 ### 2. Guest (no authentication required)
-- **Endpoint:** `POST /api/comments/public`
+- **Endpoint:** `POST /api/public/comments`
 - **Body:**
 ```json
 {
@@ -193,7 +204,7 @@ You can add comments to posts using either of the following endpoints:
 }
 ```
 
-Both endpoints return the created comment, including Markdown and rendered HTML.
+All endpoints return the created comment, including Markdown and rendered HTML.
 
 ## API Testing with Postman
 
