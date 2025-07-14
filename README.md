@@ -79,7 +79,7 @@ make migrate-up
 ### 5. Start the server
 
 ```bash
-make run
+go run main.go
 ```
 
 The API will be available at `http://localhost:8080`
@@ -125,46 +125,15 @@ The API will be available at `http://localhost:8080`
 | DB_NAME     | postcomments| Database name                        |
 | JWT_SECRET  | -           | Secret key for JWT signing           |
 
-## Testing
 
-Run unit tests:
-
-```bash
-make test
-```
-
-Run integration tests:
-
-```bash
-make test-integration
-```
-
-## Linting and Formatting
-
-```bash
-make lint      # Run linter
-make format    # Format code
-```
 
 ## Deployment
 
-### Using Docker
-
-1. Build the Docker image:
+To start the server locally, simply use:
 
 ```bash
-docker build -t post-comments-api .
+go run main.go
 ```
-
-2. Run the container:
-
-```bash
-docker run -p 8080:8080 --env-file .env post-comments-api
-```
-
-### Kubernetes
-
-Example Kubernetes deployment files are provided in the `deploy/` directory.
 
 ## Rate Limiting
 
