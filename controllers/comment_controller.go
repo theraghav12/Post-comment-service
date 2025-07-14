@@ -101,7 +101,21 @@ func GetComments(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
 		return
 	}
-	c.JSON(http.StatusOK, comments)
+	var resp []gin.H
+	for _, comment := range comments {
+		htmlContent, _ := utils.RenderMarkdown(comment.Content)
+		resp = append(resp, gin.H{
+			"id": comment.ID,
+			"post_id": comment.PostID,
+			"user_id": comment.UserID,
+			"author": comment.Author,
+			"content": comment.Content,
+			"html_content": htmlContent,
+			"created_at": comment.CreatedAt,
+			"updated_at": comment.UpdatedAt,
+		})
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 func UpdateComment(c *gin.Context) {

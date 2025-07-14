@@ -12,7 +12,7 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
-	github.com/yuin/goldmark v1.7.12
+	github.com/yuin/goldmark v1.5.4
 	golang.org/x/crypto v0.40.0
 	golang.org/x/time v0.12.0
 	gorm.io/driver/postgres v1.5.7

@@ -69,7 +69,22 @@ func GetPosts(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch posts"})
 		return
 	}
-	c.JSON(http.StatusOK, posts)
+	var resp []gin.H
+	for _, post := range posts {
+		htmlContent, _ := utils.RenderMarkdown(post.Content)
+		resp = append(resp, gin.H{
+			"id": post.ID,
+			"user_id": post.UserID,
+			"author": post.Author,
+			"title": post.Title,
+			"content": post.Content,
+			"html_content": htmlContent,
+			"created_at": post.CreatedAt,
+			"updated_at": post.UpdatedAt,
+			"comments": post.Comments,
+		})
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 func GetPost(c *gin.Context) {
@@ -83,7 +98,18 @@ func GetPost(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
 		return
 	}
-	c.JSON(http.StatusOK, post)
+	htmlContent, _ := utils.RenderMarkdown(post.Content)
+	c.JSON(http.StatusOK, gin.H{
+		"id": post.ID,
+		"user_id": post.UserID,
+		"author": post.Author,
+		"title": post.Title,
+		"content": post.Content,
+		"html_content": htmlContent,
+		"created_at": post.CreatedAt,
+		"updated_at": post.UpdatedAt,
+		"comments": post.Comments,
+	})
 }
 
 func UpdatePost(c *gin.Context) {
