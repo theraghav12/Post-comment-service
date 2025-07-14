@@ -64,8 +64,29 @@ func CreatePostPublic(c *gin.Context) {
 }
 
 func GetPosts(c *gin.Context) {
+	// Pagination params
+	page := 1
+	pageSize := 10
+	maxPageSize := 50
+	if p := c.Query("page"); p != "" {
+		if v, err := strconv.Atoi(p); err == nil && v > 0 {
+			page = v
+		}
+	}
+	if ps := c.Query("page_size"); ps != "" {
+		if v, err := strconv.Atoi(ps); err == nil && v > 0 {
+			if v > maxPageSize {
+				pageSize = maxPageSize
+			} else {
+				pageSize = v
+			}
+		}
+	}
+	offset := (page - 1) * pageSize
 	var posts []models.Post
-	if err := utils.GetDB().Preload("Comments").Find(&posts).Error; err != nil {
+	var total int64
+	utils.GetDB().Model(&models.Post{}).Count(&total)
+	if err := utils.GetDB().Preload("Comments").Limit(pageSize).Offset(offset).Order("created_at DESC").Find(&posts).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch posts"})
 		return
 	}
@@ -84,7 +105,15 @@ func GetPosts(c *gin.Context) {
 			"comments": post.Comments,
 		})
 	}
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, gin.H{
+		"posts": resp,
+		"pagination": gin.H{
+			"page": page,
+			"page_size": pageSize,
+			"total": total,
+			"total_pages": (total + int64(pageSize) - 1) / int64(pageSize),
+		},
+	})
 }
 
 func GetPost(c *gin.Context) {

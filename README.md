@@ -13,6 +13,7 @@ A RESTful API service for managing posts and comments with user authentication, 
   - Create, read, update, and delete posts
   - List all posts with pagination
   - Get posts by user
+  - **Create posts as an authenticated user or as a guest (no authentication required)**
 
 - **Comments**
   - Add comments to posts
@@ -134,6 +135,65 @@ To start the server locally, simply use:
 ```bash
 go run main.go
 ```
+
+## Creating Posts: Authenticated and Guest
+
+You can create posts using either of the following endpoints:
+
+### 1. Authenticated (requires JWT)
+- **Endpoint:** `POST /api/posts`
+- **Headers:**
+  - `Authorization: Bearer <your-jwt-token>`
+- **Body:**
+```json
+{
+  "title": "My First Post",
+  "content": "Hello **world**!",
+  "author": "raghav" // optional, will be set from user if omitted
+}
+```
+
+### 2. Guest (no authentication required)
+- **Endpoint:** `POST /api/posts/public`
+- **Body:**
+```json
+{
+  "title": "Guest Post",
+  "content": "Anyone can post!",
+  "author": "Anonymous Guest" // optional
+}
+```
+
+Both endpoints return the created post, including Markdown and rendered HTML.
+
+## Creating Comments: Authenticated and Guest
+
+You can add comments to posts using either of the following endpoints:
+
+### 1. Authenticated (requires JWT)
+- **Endpoint:** `POST /api/posts/{post_id}/comments`
+- **Headers:**
+  - `Authorization: Bearer <your-jwt-token>`
+- **Body:**
+```json
+{
+  "content": "Nice post! [Link](https://example.com)",
+  "author": "raghav" // optional, will be set from user if omitted
+}
+```
+
+### 2. Guest (no authentication required)
+- **Endpoint:** `POST /api/comments/public`
+- **Body:**
+```json
+{
+  "post_id": 1,
+  "content": "Guest comment with *Markdown*.",
+  "author": "Anonymous Guest" // optional
+}
+```
+
+Both endpoints return the created comment, including Markdown and rendered HTML.
 
 ## API Testing with Postman
 

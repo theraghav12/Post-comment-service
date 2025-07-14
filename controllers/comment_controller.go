@@ -96,8 +96,29 @@ func GetComments(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid post ID"})
 		return
 	}
+	// Pagination params
+	page := 1
+	pageSize := 10
+	maxPageSize := 50
+	if p := c.Query("page"); p != "" {
+		if v, err := strconv.Atoi(p); err == nil && v > 0 {
+			page = v
+		}
+	}
+	if ps := c.Query("page_size"); ps != "" {
+		if v, err := strconv.Atoi(ps); err == nil && v > 0 {
+			if v > maxPageSize {
+				pageSize = maxPageSize
+			} else {
+				pageSize = v
+			}
+		}
+	}
+	offset := (page - 1) * pageSize
 	var comments []models.Comment
-	if err := utils.GetDB().Where("post_id = ?", postID).Find(&comments).Error; err != nil {
+	var total int64
+	utils.GetDB().Model(&models.Comment{}).Where("post_id = ?", postID).Count(&total)
+	if err := utils.GetDB().Where("post_id = ?", postID).Limit(pageSize).Offset(offset).Order("created_at ASC").Find(&comments).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
 		return
 	}
@@ -115,7 +136,15 @@ func GetComments(c *gin.Context) {
 			"updated_at": comment.UpdatedAt,
 		})
 	}
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, gin.H{
+		"comments": resp,
+		"pagination": gin.H{
+			"page": page,
+			"page_size": pageSize,
+			"total": total,
+			"total_pages": (total + int64(pageSize) - 1) / int64(pageSize),
+		},
+	})
 }
 
 func UpdateComment(c *gin.Context) {
