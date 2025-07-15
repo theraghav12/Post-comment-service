@@ -33,7 +33,6 @@ A RESTful API service for managing posts and comments with user authentication, 
 
 - Go 1.16+
 - PostgreSQL 13+
-- Make (optional)
 
 ## Getting Started
 
